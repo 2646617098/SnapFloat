@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
@@ -20,9 +19,10 @@ public final class ViewOverlayButtonBinding implements ViewBinding {
   private final FrameLayout rootView;
 
   @NonNull
-  public final TextView captureButton;
+  public final FrameLayout captureButton;
 
-  private ViewOverlayButtonBinding(@NonNull FrameLayout rootView, @NonNull TextView captureButton) {
+  private ViewOverlayButtonBinding(@NonNull FrameLayout rootView,
+      @NonNull FrameLayout captureButton) {
     this.rootView = rootView;
     this.captureButton = captureButton;
   }
@@ -55,7 +55,7 @@ public final class ViewOverlayButtonBinding implements ViewBinding {
     int id;
     missingId: {
       id = R.id.captureButton;
-      TextView captureButton = ViewBindings.findChildViewById(rootView, id);
+      FrameLayout captureButton = ViewBindings.findChildViewById(rootView, id);
       if (captureButton == null) {
         break missingId;
       }

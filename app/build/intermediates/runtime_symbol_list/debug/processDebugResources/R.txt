@@ -2991,6 +2991,7 @@ int drawable abc_textfield_search_material 0x7f070075
 int drawable abc_vector_test 0x7f070076
 int drawable avd_hide_password 0x7f070077
 int drawable avd_show_password 0x7f070078
+int drawable bg_overlay_badge 0x7f0700e8
 int drawable bg_overlay_button 0x7f0700e7
 int drawable bg_status_card 0x7f070079
 int drawable btn_checkbox_checked_mtrl 0x7f07007a
@@ -3025,6 +3026,7 @@ int drawable ic_mtrl_chip_checked_black 0x7f070096
 int drawable ic_mtrl_chip_checked_circle 0x7f070097
 int drawable ic_mtrl_chip_close_circle 0x7f070098
 int drawable ic_notification 0x7f070099
+int drawable ic_overlay_capture 0x7f0700e9
 int drawable ic_search_black_24 0x7f07009a
 int drawable indeterminate_static 0x7f07009b
 int drawable m3_avd_hide_password 0x7f07009c
@@ -3876,7 +3878,7 @@ int string error_icon_content_description 0x7f0e003c
 int string exposed_dropdown_menu_content_description 0x7f0e003d
 int string fab_transformation_scrim_behavior 0x7f0e003e
 int string fab_transformation_sheet_behavior 0x7f0e003f
-int string floating_button_label 0x7f0e0040
+int string floating_button_content_desc 0x7f0e00c9
 int string hide_bottom_view_on_scroll_behavior 0x7f0e0041
 int string icon_content_description 0x7f0e0042
 int string item_view_role_description 0x7f0e0043

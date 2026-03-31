@@ -13,7 +13,7 @@
     <string name="action_start_overlay">启动悬浮按钮</string>
     <string name="action_stop_overlay">关闭悬浮按钮</string>
     <string name="action_reset_capture">清空截图授权</string>
-    <string name="floating_button_label">截屏</string>
+    <string name="floating_button_content_desc">截图按钮</string>
     <string name="notification_title">SnapFloat 正在运行</string>
     <string name="notification_text">悬浮按钮已准备好，点一下即可截图。</string>
     <string name="notification_channel_name">悬浮截图</string>

@@ -28,7 +28,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.codex.snapfloat.CapturePermissionStore
@@ -88,7 +87,7 @@ class OverlayService : Service() {
         if (overlayView != null) return
 
         val view = LayoutInflater.from(this).inflate(R.layout.view_overlay_button, null)
-        val button = view.findViewById<TextView>(R.id.captureButton)
+        val button = view.findViewById<View>(R.id.captureButton)
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -261,20 +260,35 @@ class OverlayService : Service() {
             return
         }
 
+        setOverlayVisible(false)
         try {
-            val image = reader.acquireLatestImage()
-            if (image == null) {
-                toast(getString(R.string.capture_frame_unavailable))
-                onComplete()
-                return
-            }
-            image.use {
-                saveImage(it, metrics)
-            }
+            Handler(Looper.getMainLooper()).postDelayed({
+                try {
+                    val image = reader.acquireLatestImage()
+                    if (image == null) {
+                        toast(getString(R.string.capture_frame_unavailable))
+                        return@postDelayed
+                    }
+                    image.use {
+                        saveImage(it, metrics)
+                    }
+                } catch (t: Throwable) {
+                    toast(getString(R.string.capture_failed, t.message ?: t.javaClass.simpleName))
+                } finally {
+                    setOverlayVisible(true)
+                    onComplete()
+                }
+            }, 90)
         } catch (t: Throwable) {
+            setOverlayVisible(true)
             toast(getString(R.string.capture_failed, t.message ?: t.javaClass.simpleName))
-        } finally {
             onComplete()
+        }
+    }
+
+    private fun setOverlayVisible(visible: Boolean) {
+        Handler(Looper.getMainLooper()).post {
+            overlayView?.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         }
     }
 

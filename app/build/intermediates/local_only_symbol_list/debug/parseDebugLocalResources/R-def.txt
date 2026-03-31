@@ -7,10 +7,12 @@ color card
 color ink
 color inkMuted
 color surfaceSoft
+drawable bg_overlay_badge
 drawable bg_overlay_button
 drawable bg_status_card
 drawable ic_app_icon
 drawable ic_notification
+drawable ic_overlay_capture
 id buttonCapturePermission
 id buttonOverlayPermission
 id buttonResetPermission
@@ -40,7 +42,7 @@ string capture_saved
 string capture_session_ended
 string capture_session_ready
 string capture_status_value
-string floating_button_label
+string floating_button_content_desc
 string main_subtitle
 string main_title
 string notification_channel_name

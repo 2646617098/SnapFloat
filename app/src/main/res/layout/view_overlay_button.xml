@@ -4,17 +4,23 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <TextView
+    <FrameLayout
         android:id="@+id/captureButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
         android:background="@drawable/bg_overlay_button"
         android:clickable="true"
         android:focusable="true"
-        android:paddingLeft="22dp"
-        android:paddingTop="14dp"
-        android:paddingRight="22dp"
-        android:paddingBottom="14dp"
-        android:text="@string/floating_button_label" />
+        android:foreground="?android:attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:padding="13dp"
+            android:src="@drawable/ic_overlay_capture"
+            android:contentDescription="@string/floating_button_content_desc" />
+
+    </FrameLayout>
 
 </FrameLayout>
