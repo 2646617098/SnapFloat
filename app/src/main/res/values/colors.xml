@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="surfaceSoft">#F4EFE8</color>
+    <color name="card">#FFF8F1</color>
+    <color name="ink">#101828</color>
+    <color name="inkMuted">#475467</color>
+    <color name="accent">#F97316</color>
+    <color name="accentDark">#C2410C</color>
+    <color name="canvas">#FFFFFF</color>
+</resources>

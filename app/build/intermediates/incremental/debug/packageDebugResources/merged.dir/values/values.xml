@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <color name="accent">#F97316</color>
+    <color name="accentDark">#C2410C</color>
+    <color name="canvas">#FFFFFF</color>
+    <color name="card">#FFF8F1</color>
+    <color name="ink">#101828</color>
+    <color name="inkMuted">#475467</color>
+    <color name="surfaceSoft">#F4EFE8</color>
+    <string name="action_capture_permission">申请截图权限</string>
+    <string name="action_overlay_permission">打开悬浮窗权限</string>
+    <string name="action_reset_capture">清空截图授权</string>
+    <string name="action_start_overlay">启动悬浮按钮</string>
+    <string name="action_stop_overlay">关闭悬浮按钮</string>
+    <string name="app_name">SnapFloat</string>
+    <string name="capture_failed">截图失败：%1$s</string>
+    <string name="capture_frame_unavailable">当前没有可用画面，请稍后再试。</string>
+    <string name="capture_permission_denied">截图权限未授予。</string>
+    <string name="capture_permission_granted">截图权限已授予。</string>
+    <string name="capture_permission_missing">请先授予截图权限并重新启动悬浮窗。</string>
+    <string name="capture_permission_reset">已清空截图授权。</string>
+    <string name="capture_saved">截图已保存：%1$s</string>
+    <string name="capture_session_ended">截图会话已结束，请重新授权后启动。</string>
+    <string name="capture_session_ready">截图会话已就绪。</string>
+    <string name="capture_status_value">截图权限：%1$s</string>
+    <string name="floating_button_label">截屏</string>
+    <string name="main_subtitle">一个只做一件事的小工具。授予悬浮窗和截图权限后，桌面上会出现一个可拖动的按钮，按下就把当前屏幕保存到系统相册。</string>
+    <string name="main_title">SnapFloat</string>
+    <string name="notification_channel_name">悬浮截图</string>
+    <string name="notification_permission_optional">通知权限未授予，前台服务通知可能不可见。</string>
+    <string name="notification_text">悬浮按钮已准备好，点一下即可截图。</string>
+    <string name="notification_title">SnapFloat 正在运行</string>
+    <string name="overlay_add_failed">悬浮按钮显示失败：%1$s</string>
+    <string name="overlay_permission_missing">请先授予悬浮窗权限。</string>
+    <string name="overlay_started">悬浮按钮已启动。</string>
+    <string name="overlay_status_value">悬浮窗权限：%1$s</string>
+    <string name="overlay_stopped">悬浮按钮已关闭。</string>
+    <string name="overlay_visible">悬浮按钮已显示。</string>
+    <string name="status_missing">未授权</string>
+    <string name="status_ready">已就绪</string>
+    <string name="status_title">准备状态</string>
+    <style name="Theme.SnapFloat" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorSecondary">@color/accentDark</item>
+        <item name="android:windowBackground">@color/surfaceSoft</item>
+        <item name="android:navigationBarColor">@color/surfaceSoft</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" ns1:targetApi="p">shortEdges</item>
+    </style>
+    <style name="Theme.SnapFloat.Transparent" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+    <style name="Widget.SnapFloat.FloatingCaptureButton" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/ink</item>
+        <item name="android:textColor">@color/canvas</item>
+        <item name="cornerRadius">28dp</item>
+        <item name="android:paddingLeft">22dp</item>
+        <item name="android:paddingRight">22dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Widget.SnapFloat.PrimaryButton" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/accent</item>
+        <item name="android:textColor">@color/canvas</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="android:paddingVertical">14dp</item>
+    </style>
+    <style name="Widget.SnapFloat.SecondaryButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="strokeColor">@color/ink</item>
+        <item name="android:textColor">@color/ink</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="android:paddingVertical">14dp</item>
+    </style>
+</resources>
