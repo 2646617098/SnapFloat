@@ -103,6 +103,7 @@ class OverlayService : Service() {
         button.setOnClickListener {
             if (!isCapturing.compareAndSet(false, true)) return@setOnClickListener
             button.isEnabled = false
+            animateCaptureButtonState(button, pressed = false)
             captureScreenshot {
                 isCapturing.set(false)
                 button.isEnabled = true
@@ -138,6 +139,7 @@ class OverlayService : Service() {
                         initialTouchX = event.rawX
                         initialTouchY = event.rawY
                         moved = false
+                        animateCaptureButtonState(v, pressed = true)
                         return true
                     }
 
@@ -146,6 +148,7 @@ class OverlayService : Service() {
                         val deltaY = (event.rawY - initialTouchY).toInt()
                         if (kotlin.math.abs(deltaX) > 6 || kotlin.math.abs(deltaY) > 6) {
                             moved = true
+                            animateCaptureButtonState(v, pressed = false)
                             params.x = initialX + deltaX
                             params.y = initialY + deltaY
                             windowManager.updateViewLayout(view, params)
@@ -154,13 +157,31 @@ class OverlayService : Service() {
                     }
 
                     MotionEvent.ACTION_UP -> {
+                        animateCaptureButtonState(v, pressed = false)
                         if (!moved) v.performClick()
+                        return true
+                    }
+
+                    MotionEvent.ACTION_CANCEL -> {
+                        animateCaptureButtonState(v, pressed = false)
                         return true
                     }
                 }
                 return true
             }
         }
+    }
+
+    private fun animateCaptureButtonState(view: View, pressed: Boolean) {
+        val targetAlpha = if (pressed) BUTTON_PRESSED_ALPHA else BUTTON_IDLE_ALPHA
+        val targetScale = if (pressed) BUTTON_PRESSED_SCALE else 1f
+        val duration = if (pressed) BUTTON_PRESS_ANIM_MS else BUTTON_RELEASE_ANIM_MS
+        view.animate()
+            .alpha(targetAlpha)
+            .scaleX(targetScale)
+            .scaleY(targetScale)
+            .setDuration(duration)
+            .start()
     }
 
     private fun cacheProjectionPermission(intent: Intent?) {
@@ -471,6 +492,11 @@ class OverlayService : Service() {
         private const val NOTIFICATION_ID = 11
         private const val CAPTURE_TIMEOUT_MS = 1200L
         private const val CLEAN_CAPTURE_DELAY_MS = 48L
+        private const val BUTTON_IDLE_ALPHA = 0.78f
+        private const val BUTTON_PRESSED_ALPHA = 0.96f
+        private const val BUTTON_PRESSED_SCALE = 0.93f
+        private const val BUTTON_PRESS_ANIM_MS = 70L
+        private const val BUTTON_RELEASE_ANIM_MS = 120L
         private val DATE_FORMAT = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
         const val EXTRA_RESULT_CODE = "extra_result_code"
         const val EXTRA_DATA_INTENT = "extra_data_intent"
