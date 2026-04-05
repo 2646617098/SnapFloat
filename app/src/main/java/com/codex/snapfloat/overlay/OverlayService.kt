@@ -40,6 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class OverlayService : Service() {
 
+    private val mainHandler = Handler(Looper.getMainLooper())
     private lateinit var windowManager: WindowManager
     private var overlayView: View? = null
     private val isCapturing = AtomicBoolean(false)
@@ -64,18 +65,11 @@ class OverlayService : Service() {
         if (overlayView == null) {
             showOverlay()
         }
-        if (mediaProjection == null && projectionResultCode != null && projectionDataIntent != null) {
-            try {
-                startProjectionSession()
-            } catch (t: Throwable) {
-                toast(getString(R.string.capture_failed, "session-${t.javaClass.simpleName}"))
-            }
-        }
         return START_STICKY
     }
 
     override fun onDestroy() {
-        releaseProjectionSession()
+        releaseProjectionSession(stopProjection = true)
         overlayView?.let { windowManager.removeView(it) }
         overlayView = null
         super.onDestroy()
@@ -106,7 +100,7 @@ class OverlayService : Service() {
         button.setOnClickListener {
             if (!isCapturing.compareAndSet(false, true)) return@setOnClickListener
             button.isEnabled = false
-            Handler(Looper.getMainLooper()).postDelayed({
+            mainHandler.postDelayed({
                 captureScreenshot {
                     isCapturing.set(false)
                     button.isEnabled = true
@@ -186,13 +180,30 @@ class OverlayService : Service() {
     private fun startProjectionSession() {
         val resultCode = projectionResultCode ?: CapturePermissionStore.resultCode
         val dataIntent = projectionDataIntent ?: CapturePermissionStore.dataIntent
-        if (resultCode == null || dataIntent == null || mediaProjection != null) return
+        if (resultCode == null || dataIntent == null) return
 
-        promoteToMediaProjectionForeground()
+        val projection = if (mediaProjection == null) {
+            promoteToMediaProjectionForeground()
+            val projectionManager =
+                getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+            val createdProjection = projectionManager.getMediaProjection(resultCode, dataIntent)
+            val callback = object : MediaProjection.Callback() {
+                override fun onStop() {
+                    releaseProjectionSession(stopProjection = false)
+                    resetCaptureUiState()
+                    toast(getString(R.string.capture_session_ended))
+                }
+            }
+            createdProjection.registerCallback(callback, mainHandler)
+            projectionCallback = callback
+            mediaProjection = createdProjection
+            createdProjection
+        } else {
+            mediaProjection!!
+        }
 
-        val projectionManager =
-            getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
-        val projection = projectionManager.getMediaProjection(resultCode, dataIntent)
+        if (imageReader != null && virtualDisplay != null && captureMetrics != null) return
+
         val metrics = resources.displayMetrics
         val reader = ImageReader.newInstance(
             metrics.widthPixels,
@@ -200,14 +211,6 @@ class OverlayService : Service() {
             PixelFormat.RGBA_8888,
             3
         )
-        val callback = object : MediaProjection.Callback() {
-            override fun onStop() {
-                releaseProjectionSession()
-                toast(getString(R.string.capture_session_ended))
-            }
-        }
-
-        projection.registerCallback(callback, Handler(Looper.getMainLooper()))
         val display = projection.createVirtualDisplay(
             "snapfloat-capture",
             metrics.widthPixels,
@@ -216,27 +219,20 @@ class OverlayService : Service() {
             DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
             reader.surface,
             null,
-            Handler(Looper.getMainLooper())
+            mainHandler
         )
 
-        mediaProjection = projection
         imageReader = reader
         virtualDisplay = display
-        projectionCallback = callback
         captureMetrics = metrics
-        toast(getString(R.string.capture_session_ready))
     }
 
-    private fun releaseProjectionSession() {
+    private fun releaseProjectionSession(stopProjection: Boolean) {
         val projection = mediaProjection
         val callback = projectionCallback
 
+        releaseCapturePipeline()
         projectionCallback = null
-        virtualDisplay?.release()
-        virtualDisplay = null
-        imageReader?.close()
-        imageReader = null
-        captureMetrics = null
         mediaProjection = null
 
         if (projection != null && callback != null) {
@@ -245,40 +241,67 @@ class OverlayService : Service() {
             } catch (_: Throwable) {
             }
         }
-        try {
-            projection?.stop()
-        } catch (_: Throwable) {
+        if (stopProjection) {
+            try {
+                projection?.stop()
+            } catch (_: Throwable) {
+            }
         }
     }
 
     private fun captureScreenshot(onComplete: () -> Unit) {
-        val reader = imageReader
-        val metrics = captureMetrics
-        if (reader == null || metrics == null || virtualDisplay == null) {
-            toast(getString(R.string.capture_permission_missing))
-            onComplete()
-            return
-        }
-
         setOverlayVisible(false)
         try {
-            Handler(Looper.getMainLooper()).postDelayed({
-                try {
-                    val image = reader.acquireLatestImage()
-                    if (image == null) {
-                        toast(getString(R.string.capture_frame_unavailable))
-                        return@postDelayed
-                    }
-                    image.use {
-                        saveImage(it, metrics)
-                    }
-                } catch (t: Throwable) {
-                    toast(getString(R.string.capture_failed, t.message ?: t.javaClass.simpleName))
-                } finally {
-                    setOverlayVisible(true)
-                    onComplete()
+            if (!ensureProjectionReady()) {
+                setOverlayVisible(true)
+                onComplete()
+                return
+            }
+
+            val reader = imageReader
+            val metrics = captureMetrics
+            if (reader == null || metrics == null || virtualDisplay == null) {
+                toast(getString(R.string.capture_frame_unavailable))
+                setOverlayVisible(true)
+                onComplete()
+                return
+            }
+
+            reader.acquireLatestImage()?.close()
+            reader.setOnImageAvailableListener(null, null)
+            val finished = AtomicBoolean(false)
+            fun completeOnce(message: String? = null, error: Throwable? = null) {
+                if (!finished.compareAndSet(false, true)) return
+                reader.setOnImageAvailableListener(null, null)
+                if (message != null) {
+                    toast(message)
+                } else if (error != null) {
+                    toast(getString(R.string.capture_failed, error.message ?: error.javaClass.simpleName))
                 }
-            }, 90)
+                setOverlayVisible(true)
+                onComplete()
+            }
+
+            val timeoutRunnable = Runnable {
+                completeOnce(message = getString(R.string.capture_frame_unavailable))
+            }
+            mainHandler.postDelayed(timeoutRunnable, CAPTURE_TIMEOUT_MS)
+            reader.setOnImageAvailableListener({ availableReader ->
+                var image: Image? = null
+                try {
+                    if (finished.get()) return@setOnImageAvailableListener
+                    image = availableReader.acquireLatestImage()
+                    if (image == null) return@setOnImageAvailableListener
+                    mainHandler.removeCallbacks(timeoutRunnable)
+                    saveImage(image, metrics)
+                    completeOnce()
+                } catch (t: Throwable) {
+                    mainHandler.removeCallbacks(timeoutRunnable)
+                    completeOnce(error = t)
+                } finally {
+                    image?.close()
+                }
+            }, mainHandler)
         } catch (t: Throwable) {
             setOverlayVisible(true)
             toast(getString(R.string.capture_failed, t.message ?: t.javaClass.simpleName))
@@ -287,9 +310,43 @@ class OverlayService : Service() {
     }
 
     private fun setOverlayVisible(visible: Boolean) {
-        Handler(Looper.getMainLooper()).post {
+        mainHandler.post {
             overlayView?.visibility = if (visible) View.VISIBLE else View.INVISIBLE
         }
+    }
+
+    private fun ensureProjectionReady(): Boolean {
+        if (mediaProjection != null) {
+            return true
+        }
+        return try {
+            startProjectionSession()
+            mediaProjection != null
+        } catch (_: SecurityException) {
+            projectionResultCode = null
+            projectionDataIntent = null
+            releaseProjectionSession(stopProjection = false)
+            toast(getString(R.string.capture_permission_missing))
+            false
+        } catch (t: Throwable) {
+            toast(getString(R.string.capture_failed, "session-${t.javaClass.simpleName}"))
+            false
+        }
+    }
+
+    private fun releaseCapturePipeline() {
+        imageReader?.setOnImageAvailableListener(null, null)
+        virtualDisplay?.release()
+        virtualDisplay = null
+        imageReader?.close()
+        imageReader = null
+        captureMetrics = null
+    }
+
+    private fun resetCaptureUiState() {
+        isCapturing.set(false)
+        overlayView?.findViewById<View>(R.id.captureButton)?.isEnabled = true
+        setOverlayVisible(true)
     }
 
     private fun saveImage(image: Image, metrics: DisplayMetrics) {
@@ -382,7 +439,7 @@ class OverlayService : Service() {
     }
 
     private fun toast(message: String) {
-        Handler(Looper.getMainLooper()).post {
+        mainHandler.post {
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
@@ -390,6 +447,7 @@ class OverlayService : Service() {
     companion object {
         private const val CHANNEL_ID = "snapfloat_overlay"
         private const val NOTIFICATION_ID = 11
+        private const val CAPTURE_TIMEOUT_MS = 1200L
         private val DATE_FORMAT = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
         const val EXTRA_RESULT_CODE = "extra_result_code"
         const val EXTRA_DATA_INTENT = "extra_data_intent"

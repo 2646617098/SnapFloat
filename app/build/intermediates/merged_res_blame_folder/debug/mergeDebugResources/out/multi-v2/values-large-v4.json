@@ -4,7 +4,7 @@
             "outputFile": "com.codex.snapfloat.app-mergeDebugResources-33:/values-large-v4/values-large-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\26466\\.gradle\\caches\\9.0.0\\transforms\\24bd5cc203521d68f6f3d3cb6c1e7388\\transformed\\material-1.12.0\\res\\values-large-v4\\values-large-v4.xml",
+                    "source": "C:\\Users\\26466\\.gradle\\caches\\9.0.0\\transforms\\6fa73462a1bacda4fe50853dc72c7d5d\\transformed\\material-1.12.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\26466\\.gradle\\caches\\9.0.0\\transforms\\bee6e79e0afa54a7e7994fd648b003d4\\transformed\\appcompat-1.7.0\\res\\values-large-v4\\values-large-v4.xml",
+                    "source": "C:\\Users\\26466\\.gradle\\caches\\9.0.0\\transforms\\f6e88e9585172458aed7f1c46048070e\\transformed\\appcompat-1.7.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",

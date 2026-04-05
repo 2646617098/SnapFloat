@@ -4,7 +4,7 @@
             "outputFile": "com.codex.snapfloat.app-mergeDebugResources-33:/values-mn/values-mn.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\26466\\.gradle\\caches\\9.0.0\\transforms\\8c97d544f9fbff002fa0e9b4e2fe7242\\transformed\\core-1.13.1\\res\\values-mn\\values-mn.xml",
+                    "source": "C:\\Users\\26466\\.gradle\\caches\\9.0.0\\transforms\\229b7d522d520e87a7521fda7fbb9e52\\transformed\\core-1.13.1\\res\\values-mn\\values-mn.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\26466\\.gradle\\caches\\9.0.0\\transforms\\24bd5cc203521d68f6f3d3cb6c1e7388\\transformed\\material-1.12.0\\res\\values-mn\\values-mn.xml",
+                    "source": "C:\\Users\\26466\\.gradle\\caches\\9.0.0\\transforms\\6fa73462a1bacda4fe50853dc72c7d5d\\transformed\\material-1.12.0\\res\\values-mn\\values-mn.xml",
                     "from": {
                         "startLines": "2,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -40,7 +40,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\26466\\.gradle\\caches\\9.0.0\\transforms\\bee6e79e0afa54a7e7994fd648b003d4\\transformed\\appcompat-1.7.0\\res\\values-mn\\values-mn.xml",
+                    "source": "C:\\Users\\26466\\.gradle\\caches\\9.0.0\\transforms\\f6e88e9585172458aed7f1c46048070e\\transformed\\appcompat-1.7.0\\res\\values-mn\\values-mn.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
