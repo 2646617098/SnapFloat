@@ -1,0 +1,34 @@
+[
+    {
+        "merged": "com.codex.snapfloat.app-release-35:/drawable_ic_app_icon.xml.flat",
+        "source": "com.codex.snapfloat.app-main-36:/drawable/ic_app_icon.xml"
+    },
+    {
+        "merged": "com.codex.snapfloat.app-release-35:/drawable_bg_overlay_button.xml.flat",
+        "source": "com.codex.snapfloat.app-main-36:/drawable/bg_overlay_button.xml"
+    },
+    {
+        "merged": "com.codex.snapfloat.app-release-35:/drawable_ic_notification.xml.flat",
+        "source": "com.codex.snapfloat.app-main-36:/drawable/ic_notification.xml"
+    },
+    {
+        "merged": "com.codex.snapfloat.app-release-35:/drawable_bg_status_card.xml.flat",
+        "source": "com.codex.snapfloat.app-main-36:/drawable/bg_status_card.xml"
+    },
+    {
+        "merged": "com.codex.snapfloat.app-release-35:/drawable_ic_overlay_capture.xml.flat",
+        "source": "com.codex.snapfloat.app-main-36:/drawable/ic_overlay_capture.xml"
+    },
+    {
+        "merged": "com.codex.snapfloat.app-release-35:/layout_view_overlay_button.xml.flat",
+        "source": "com.codex.snapfloat.app-main-36:/layout/view_overlay_button.xml"
+    },
+    {
+        "merged": "com.codex.snapfloat.app-release-35:/layout_activity_main.xml.flat",
+        "source": "com.codex.snapfloat.app-main-36:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.codex.snapfloat.app-release-35:/drawable_bg_overlay_badge.xml.flat",
+        "source": "com.codex.snapfloat.app-main-36:/drawable/bg_overlay_badge.xml"
+    }
+]

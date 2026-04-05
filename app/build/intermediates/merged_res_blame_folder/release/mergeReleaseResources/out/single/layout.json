@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.codex.snapfloat.app-mergeReleaseResources-34:/layout/view_overlay_button.xml",
+        "source": "com.codex.snapfloat.app-main-36:/layout/view_overlay_button.xml"
+    },
+    {
+        "merged": "com.codex.snapfloat.app-mergeReleaseResources-34:/layout/activity_main.xml",
+        "source": "com.codex.snapfloat.app-main-36:/layout/activity_main.xml"
+    }
+]

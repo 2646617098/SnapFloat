@@ -1,0 +1,4 @@
+#Tue Mar 31 16:31:09 CST 2026
+base.0=E\:\\software\\Code\\Java\\vibe coding\\SnapFloat\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
