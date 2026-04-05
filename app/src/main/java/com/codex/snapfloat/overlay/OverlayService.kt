@@ -22,6 +22,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.provider.MediaStore
+import android.net.Uri
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -52,6 +53,7 @@ class OverlayService : Service() {
     private var virtualDisplay: VirtualDisplay? = null
     private var projectionCallback: MediaProjection.Callback? = null
     private var captureMetrics: DisplayMetrics? = null
+    private var captureMode: Int = CAPTURE_MODE_CLEAN
 
     override fun onCreate() {
         super.onCreate()
@@ -62,6 +64,7 @@ class OverlayService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         cacheProjectionPermission(intent)
+        captureMode = intent?.getIntExtra(EXTRA_CAPTURE_MODE, captureMode) ?: captureMode
         if (overlayView == null) {
             showOverlay()
         }
@@ -100,12 +103,10 @@ class OverlayService : Service() {
         button.setOnClickListener {
             if (!isCapturing.compareAndSet(false, true)) return@setOnClickListener
             button.isEnabled = false
-            mainHandler.postDelayed({
-                captureScreenshot {
-                    isCapturing.set(false)
-                    button.isEnabled = true
-                }
-            }, 120)
+            captureScreenshot {
+                isCapturing.set(false)
+                button.isEnabled = true
+            }
         }
 
         try {
@@ -250,62 +251,83 @@ class OverlayService : Service() {
     }
 
     private fun captureScreenshot(onComplete: () -> Unit) {
-        setOverlayVisible(false)
-        try {
-            if (!ensureProjectionReady()) {
-                setOverlayVisible(true)
-                onComplete()
-                return
-            }
+        val hideOverlayBeforeCapture = captureMode == CAPTURE_MODE_CLEAN
+        if (hideOverlayBeforeCapture) {
+            setOverlayVisible(false)
+        }
 
-            val reader = imageReader
-            val metrics = captureMetrics
-            if (reader == null || metrics == null || virtualDisplay == null) {
-                toast(getString(R.string.capture_frame_unavailable))
-                setOverlayVisible(true)
-                onComplete()
-                return
-            }
+        val executeCapture = captureFlow@{
+            try {
+                if (!ensureProjectionReady()) {
+                    if (hideOverlayBeforeCapture) {
+                        setOverlayVisible(true)
+                    }
+                    onComplete()
+                    return@captureFlow
+                }
 
-            reader.acquireLatestImage()?.close()
-            reader.setOnImageAvailableListener(null, null)
-            val finished = AtomicBoolean(false)
-            fun completeOnce(message: String? = null, error: Throwable? = null) {
-                if (!finished.compareAndSet(false, true)) return
+                val reader = imageReader
+                val metrics = captureMetrics
+                if (reader == null || metrics == null || virtualDisplay == null) {
+                    toast(getString(R.string.capture_frame_unavailable))
+                    if (hideOverlayBeforeCapture) {
+                        setOverlayVisible(true)
+                    }
+                    onComplete()
+                    return@captureFlow
+                }
+
+                reader.acquireLatestImage()?.close()
                 reader.setOnImageAvailableListener(null, null)
-                if (message != null) {
-                    toast(message)
-                } else if (error != null) {
-                    toast(getString(R.string.capture_failed, error.message ?: error.javaClass.simpleName))
+                val finished = AtomicBoolean(false)
+                fun completeOnce(message: String? = null, error: Throwable? = null) {
+                    if (!finished.compareAndSet(false, true)) return
+                    reader.setOnImageAvailableListener(null, null)
+                    if (message != null) {
+                        toast(message)
+                    } else if (error != null) {
+                        toast(getString(R.string.capture_failed, error.message ?: error.javaClass.simpleName))
+                    }
+                    if (hideOverlayBeforeCapture) {
+                        setOverlayVisible(true)
+                    }
+                    onComplete()
                 }
-                setOverlayVisible(true)
+
+                val timeoutRunnable = Runnable {
+                    completeOnce(message = getString(R.string.capture_frame_unavailable))
+                }
+                mainHandler.postDelayed(timeoutRunnable, CAPTURE_TIMEOUT_MS)
+                reader.setOnImageAvailableListener({ availableReader ->
+                    var image: Image? = null
+                    try {
+                        if (finished.get()) return@setOnImageAvailableListener
+                        image = availableReader.acquireLatestImage()
+                        if (image == null) return@setOnImageAvailableListener
+                        mainHandler.removeCallbacks(timeoutRunnable)
+                        val savedUri = saveImage(image, metrics)
+                        toast(getString(R.string.capture_saved, savedUri.toString()))
+                        completeOnce()
+                    } catch (t: Throwable) {
+                        mainHandler.removeCallbacks(timeoutRunnable)
+                        completeOnce(error = t)
+                    } finally {
+                        image?.close()
+                    }
+                }, mainHandler)
+            } catch (t: Throwable) {
+                if (hideOverlayBeforeCapture) {
+                    setOverlayVisible(true)
+                }
+                toast(getString(R.string.capture_failed, t.message ?: t.javaClass.simpleName))
                 onComplete()
             }
+        }
 
-            val timeoutRunnable = Runnable {
-                completeOnce(message = getString(R.string.capture_frame_unavailable))
-            }
-            mainHandler.postDelayed(timeoutRunnable, CAPTURE_TIMEOUT_MS)
-            reader.setOnImageAvailableListener({ availableReader ->
-                var image: Image? = null
-                try {
-                    if (finished.get()) return@setOnImageAvailableListener
-                    image = availableReader.acquireLatestImage()
-                    if (image == null) return@setOnImageAvailableListener
-                    mainHandler.removeCallbacks(timeoutRunnable)
-                    saveImage(image, metrics)
-                    completeOnce()
-                } catch (t: Throwable) {
-                    mainHandler.removeCallbacks(timeoutRunnable)
-                    completeOnce(error = t)
-                } finally {
-                    image?.close()
-                }
-            }, mainHandler)
-        } catch (t: Throwable) {
-            setOverlayVisible(true)
-            toast(getString(R.string.capture_failed, t.message ?: t.javaClass.simpleName))
-            onComplete()
+        if (hideOverlayBeforeCapture) {
+            mainHandler.postDelayed(executeCapture, CLEAN_CAPTURE_DELAY_MS)
+        } else {
+            executeCapture.invoke()
         }
     }
 
@@ -349,7 +371,7 @@ class OverlayService : Service() {
         setOverlayVisible(true)
     }
 
-    private fun saveImage(image: Image, metrics: DisplayMetrics) {
+    private fun saveImage(image: Image, metrics: DisplayMetrics): Uri {
         val plane = image.planes.first()
         val buffer = plane.buffer
         val pixelStride = plane.pixelStride
@@ -390,7 +412,7 @@ class OverlayService : Service() {
         resolver.update(uri, contentValues, null, null)
 
         croppedBitmap.recycle()
-        toast(getString(R.string.capture_saved, uri.toString()))
+        return uri
     }
 
     private fun buildNotification(): Notification {
@@ -448,9 +470,13 @@ class OverlayService : Service() {
         private const val CHANNEL_ID = "snapfloat_overlay"
         private const val NOTIFICATION_ID = 11
         private const val CAPTURE_TIMEOUT_MS = 1200L
+        private const val CLEAN_CAPTURE_DELAY_MS = 48L
         private val DATE_FORMAT = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US)
         const val EXTRA_RESULT_CODE = "extra_result_code"
         const val EXTRA_DATA_INTENT = "extra_data_intent"
+        const val EXTRA_CAPTURE_MODE = "extra_capture_mode"
+        const val CAPTURE_MODE_FAST = 1
+        const val CAPTURE_MODE_CLEAN = 2
 
         fun createIntent(context: Context): Intent = Intent(context, OverlayService::class.java)
     }

@@ -4,6 +4,8 @@ package com.codex.snapfloat.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -36,6 +38,18 @@ public final class ActivityMainBinding implements ViewBinding {
   public final MaterialButton buttonStopOverlay;
 
   @NonNull
+  public final RadioGroup radioCaptureMode;
+
+  @NonNull
+  public final RadioButton radioModeClean;
+
+  @NonNull
+  public final RadioButton radioModeFast;
+
+  @NonNull
+  public final TextView textCaptureModeTitle;
+
+  @NonNull
   public final TextView textCaptureStatus;
 
   @NonNull
@@ -54,7 +68,9 @@ public final class ActivityMainBinding implements ViewBinding {
       @NonNull MaterialButton buttonCapturePermission,
       @NonNull MaterialButton buttonOverlayPermission,
       @NonNull MaterialButton buttonResetPermission, @NonNull MaterialButton buttonStartOverlay,
-      @NonNull MaterialButton buttonStopOverlay, @NonNull TextView textCaptureStatus,
+      @NonNull MaterialButton buttonStopOverlay, @NonNull RadioGroup radioCaptureMode,
+      @NonNull RadioButton radioModeClean, @NonNull RadioButton radioModeFast,
+      @NonNull TextView textCaptureModeTitle, @NonNull TextView textCaptureStatus,
       @NonNull TextView textOverlayStatus, @NonNull TextView textStatusTitle,
       @NonNull TextView textSubtitle, @NonNull TextView textTitle) {
     this.rootView = rootView;
@@ -63,6 +79,10 @@ public final class ActivityMainBinding implements ViewBinding {
     this.buttonResetPermission = buttonResetPermission;
     this.buttonStartOverlay = buttonStartOverlay;
     this.buttonStopOverlay = buttonStopOverlay;
+    this.radioCaptureMode = radioCaptureMode;
+    this.radioModeClean = radioModeClean;
+    this.radioModeFast = radioModeFast;
+    this.textCaptureModeTitle = textCaptureModeTitle;
     this.textCaptureStatus = textCaptureStatus;
     this.textOverlayStatus = textOverlayStatus;
     this.textStatusTitle = textStatusTitle;
@@ -127,6 +147,30 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.radioCaptureMode;
+      RadioGroup radioCaptureMode = ViewBindings.findChildViewById(rootView, id);
+      if (radioCaptureMode == null) {
+        break missingId;
+      }
+
+      id = R.id.radioModeClean;
+      RadioButton radioModeClean = ViewBindings.findChildViewById(rootView, id);
+      if (radioModeClean == null) {
+        break missingId;
+      }
+
+      id = R.id.radioModeFast;
+      RadioButton radioModeFast = ViewBindings.findChildViewById(rootView, id);
+      if (radioModeFast == null) {
+        break missingId;
+      }
+
+      id = R.id.textCaptureModeTitle;
+      TextView textCaptureModeTitle = ViewBindings.findChildViewById(rootView, id);
+      if (textCaptureModeTitle == null) {
+        break missingId;
+      }
+
       id = R.id.textCaptureStatus;
       TextView textCaptureStatus = ViewBindings.findChildViewById(rootView, id);
       if (textCaptureStatus == null) {
@@ -159,7 +203,8 @@ public final class ActivityMainBinding implements ViewBinding {
 
       return new ActivityMainBinding((ScrollView) rootView, buttonCapturePermission,
           buttonOverlayPermission, buttonResetPermission, buttonStartOverlay, buttonStopOverlay,
-          textCaptureStatus, textOverlayStatus, textStatusTitle, textSubtitle, textTitle);
+          radioCaptureMode, radioModeClean, radioModeFast, textCaptureModeTitle, textCaptureStatus,
+          textOverlayStatus, textStatusTitle, textSubtitle, textTitle);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

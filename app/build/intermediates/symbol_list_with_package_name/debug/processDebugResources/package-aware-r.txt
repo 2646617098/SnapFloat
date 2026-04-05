@@ -3468,6 +3468,9 @@ id pressed
 id progress_circular
 id progress_horizontal
 id radio
+id radioCaptureMode
+id radioModeClean
+id radioModeFast
 id ratio
 id rectangles
 id report_drawn
@@ -3555,6 +3558,7 @@ id tag_unhandled_key_listeners
 id tag_window_insets_animation_callback
 id text
 id text2
+id textCaptureModeTitle
 id textCaptureStatus
 id textEnd
 id textOverlayStatus
@@ -3862,6 +3866,9 @@ string call_notification_ongoing_text
 string call_notification_screening_text
 string capture_failed
 string capture_frame_unavailable
+string capture_mode_clean
+string capture_mode_fast
+string capture_mode_title
 string capture_permission_denied
 string capture_permission_granted
 string capture_permission_missing

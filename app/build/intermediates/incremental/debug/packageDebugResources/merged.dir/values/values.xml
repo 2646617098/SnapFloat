@@ -15,6 +15,9 @@
     <string name="app_name">SnapFloat</string>
     <string name="capture_failed">截图失败：%1$s</string>
     <string name="capture_frame_unavailable">当前没有可用画面，请稍后再试。</string>
+    <string name="capture_mode_clean">干净模式（隐藏按钮后截图）</string>
+    <string name="capture_mode_fast">极速模式（可能截到悬浮按钮）</string>
+    <string name="capture_mode_title">截图模式</string>
     <string name="capture_permission_denied">截图权限未授予。</string>
     <string name="capture_permission_granted">截图权限已授予。</string>
     <string name="capture_permission_missing">请先授予截图权限并重新启动悬浮窗。</string>

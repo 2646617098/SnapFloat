@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var projectionManager: MediaProjectionManager
+    private val appPrefs by lazy { getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
 
     private val projectionLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         projectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        initCaptureModeSelector()
 
         binding.buttonOverlayPermission.setOnClickListener {
             startActivity(
@@ -68,6 +70,7 @@ class MainActivity : AppCompatActivity() {
             val serviceIntent = OverlayService.createIntent(this).apply {
                 CapturePermissionStore.resultCode?.let { putExtra(OverlayService.EXTRA_RESULT_CODE, it) }
                 CapturePermissionStore.dataIntent?.let { putExtra(OverlayService.EXTRA_DATA_INTENT, Intent(it)) }
+                putExtra(OverlayService.EXTRA_CAPTURE_MODE, getSelectedCaptureMode())
             }
             ContextCompat.startForegroundService(this, serviceIntent)
             toast(getString(R.string.overlay_started))
@@ -115,7 +118,36 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun initCaptureModeSelector() {
+        when (appPrefs.getInt(PREF_CAPTURE_MODE, OverlayService.CAPTURE_MODE_CLEAN)) {
+            OverlayService.CAPTURE_MODE_FAST -> binding.radioModeFast.isChecked = true
+            else -> binding.radioModeClean.isChecked = true
+        }
+
+        binding.radioCaptureMode.setOnCheckedChangeListener { _, checkedId ->
+            val mode = if (checkedId == binding.radioModeFast.id) {
+                OverlayService.CAPTURE_MODE_FAST
+            } else {
+                OverlayService.CAPTURE_MODE_CLEAN
+            }
+            appPrefs.edit().putInt(PREF_CAPTURE_MODE, mode).apply()
+        }
+    }
+
+    private fun getSelectedCaptureMode(): Int {
+        return if (binding.radioModeFast.isChecked) {
+            OverlayService.CAPTURE_MODE_FAST
+        } else {
+            OverlayService.CAPTURE_MODE_CLEAN
+        }
+    }
+
     private fun toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        private const val PREFS_NAME = "snapfloat_prefs"
+        private const val PREF_CAPTURE_MODE = "pref_capture_mode"
     }
 }

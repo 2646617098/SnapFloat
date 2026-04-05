@@ -19,6 +19,10 @@ id buttonResetPermission
 id buttonStartOverlay
 id buttonStopOverlay
 id captureButton
+id radioCaptureMode
+id radioModeClean
+id radioModeFast
+id textCaptureModeTitle
 id textCaptureStatus
 id textOverlayStatus
 id textStatusTitle
@@ -34,6 +38,9 @@ string action_stop_overlay
 string app_name
 string capture_failed
 string capture_frame_unavailable
+string capture_mode_clean
+string capture_mode_fast
+string capture_mode_title
 string capture_permission_denied
 string capture_permission_granted
 string capture_permission_missing

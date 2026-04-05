@@ -1,34 +1,42 @@
 [
     {
+        "merged": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-debug-35:\\layout_view_overlay_button.xml.flat",
+        "source": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-main-37:\\layout\\view_overlay_button.xml"
+    },
+    {
+        "merged": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-debug-35:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-main-37:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-debug-35:\\drawable_bg_status_card.xml.flat",
+        "source": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-main-37:\\drawable\\bg_status_card.xml"
+    },
+    {
         "merged": "com.codex.snapfloat.app-debug-35:/layout_view_overlay_button.xml.flat",
         "source": "com.codex.snapfloat.app-main-37:/layout/view_overlay_button.xml"
     },
     {
-        "merged": "com.codex.snapfloat.app-debug-35:/drawable_ic_notification.xml.flat",
-        "source": "com.codex.snapfloat.app-main-37:/drawable/ic_notification.xml"
+        "merged": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-debug-35:\\drawable_ic_notification.xml.flat",
+        "source": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-main-37:\\drawable\\ic_notification.xml"
     },
     {
-        "merged": "com.codex.snapfloat.app-debug-35:/drawable_bg_overlay_button.xml.flat",
-        "source": "com.codex.snapfloat.app-main-37:/drawable/bg_overlay_button.xml"
+        "merged": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-debug-35:\\drawable_bg_overlay_badge.xml.flat",
+        "source": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-main-37:\\drawable\\bg_overlay_badge.xml"
     },
     {
-        "merged": "com.codex.snapfloat.app-debug-35:/drawable_ic_app_icon.xml.flat",
-        "source": "com.codex.snapfloat.app-main-37:/drawable/ic_app_icon.xml"
+        "merged": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-debug-35:\\drawable_bg_overlay_button.xml.flat",
+        "source": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-main-37:\\drawable\\bg_overlay_button.xml"
     },
     {
-        "merged": "com.codex.snapfloat.app-debug-35:/drawable_bg_overlay_badge.xml.flat",
-        "source": "com.codex.snapfloat.app-main-37:/drawable/bg_overlay_badge.xml"
+        "merged": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-debug-35:\\drawable_ic_app_icon.xml.flat",
+        "source": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-main-37:\\drawable\\ic_app_icon.xml"
+    },
+    {
+        "merged": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-debug-35:\\drawable_ic_overlay_capture.xml.flat",
+        "source": "C:\\Users\\26466\\.gradle\\daemon\\9.0.0\\com.codex.snapfloat.app-main-37:\\drawable\\ic_overlay_capture.xml"
     },
     {
         "merged": "com.codex.snapfloat.app-debug-35:/layout_activity_main.xml.flat",
         "source": "com.codex.snapfloat.app-main-37:/layout/activity_main.xml"
-    },
-    {
-        "merged": "com.codex.snapfloat.app-debug-35:/drawable_bg_status_card.xml.flat",
-        "source": "com.codex.snapfloat.app-main-37:/drawable/bg_status_card.xml"
-    },
-    {
-        "merged": "com.codex.snapfloat.app-debug-35:/drawable_ic_overlay_capture.xml.flat",
-        "source": "com.codex.snapfloat.app-main-37:/drawable/ic_overlay_capture.xml"
     }
 ]

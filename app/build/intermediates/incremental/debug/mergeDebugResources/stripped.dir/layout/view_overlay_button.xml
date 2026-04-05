@@ -8,6 +8,7 @@
         android:id="@+id/captureButton"
         android:layout_width="62dp"
         android:layout_height="62dp"
+        android:alpha="0.78"
         android:background="@drawable/bg_overlay_button"
         android:clickable="true"
         android:focusable="true"

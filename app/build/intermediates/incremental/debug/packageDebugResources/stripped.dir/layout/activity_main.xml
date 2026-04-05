@@ -64,6 +64,49 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_status_card"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/textCaptureModeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/capture_mode_title"
+                android:textColor="@color/ink"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/radioCaptureMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/radioModeFast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/capture_mode_fast"
+                    android:textColor="@color/ink"
+                    android:textSize="14sp" />
+
+                <RadioButton
+                    android:id="@+id/radioModeClean"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/capture_mode_clean"
+                    android:textColor="@color/ink"
+                    android:textSize="14sp" />
+            </RadioGroup>
+        </LinearLayout>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonOverlayPermission"
             style="@style/Widget.SnapFloat.PrimaryButton"

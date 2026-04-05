@@ -4,6 +4,9 @@
     <string name="main_title">SnapFloat</string>
     <string name="main_subtitle">一个只做一件事的小工具。授予悬浮窗和截图权限后，桌面上会出现一个可拖动的按钮，按下就把当前屏幕保存到系统相册。</string>
     <string name="status_title">准备状态</string>
+    <string name="capture_mode_title">截图模式</string>
+    <string name="capture_mode_fast">极速模式（可能截到悬浮按钮）</string>
+    <string name="capture_mode_clean">干净模式（隐藏按钮后截图）</string>
     <string name="overlay_status_value">悬浮窗权限：%1$s</string>
     <string name="capture_status_value">截图权限：%1$s</string>
     <string name="status_ready">已就绪</string>
